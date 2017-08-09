@@ -200,6 +200,15 @@ func (c *AWSClient) IsChinaCloud() bool {
 	return false
 }
 
+// Get region specific Domain for building urls such as ECR repository url
+func (c *AWSClient) GetRegionDomain() string {
+	if c.region == "cn-north-1" {
+		return "amazonaws.com.cn"
+	} else {
+		return "amazonaws.com"
+	}
+}
+
 // Client configures and returns a fully initialized AWSClient
 func (c *Config) Client() (interface{}, error) {
 	// Get the auth and region. This can fail if keys/regions were not

@@ -92,15 +92,15 @@ func resourceAwsEcrRepositoryRead(d *schema.ResourceData, meta interface{}) erro
 	d.Set("registry_id", repository.RegistryId)
 	d.Set("name", repository.RepositoryName)
 
-	repositoryUrl := buildRepositoryUrl(repository, meta.(*AWSClient).region)
+	repositoryUrl := buildRepositoryUrl(repository, meta.(*AWSClient).region, meta.(*AWSClient).GetRegionDomain())
 	log.Printf("[INFO] Setting the repository url to be %s", repositoryUrl)
 	d.Set("repository_url", repositoryUrl)
 
 	return nil
 }
 
-func buildRepositoryUrl(repo *ecr.Repository, region string) string {
-	return fmt.Sprintf("%s.dkr.ecr.%s.amazonaws.com/%s", *repo.RegistryId, region, *repo.RepositoryName)
+func buildRepositoryUrl(repo *ecr.Repository, region string, regionDomain string) string {
+	return fmt.Sprintf("%s.dkr.ecr.%s.%s/%s", *repo.RegistryId, region, regionDomain, *repo.RepositoryName)
 }
 
 func resourceAwsEcrRepositoryDelete(d *schema.ResourceData, meta interface{}) error {
